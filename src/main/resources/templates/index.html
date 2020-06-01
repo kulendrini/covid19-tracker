@@ -1,9 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 
 <html lang="en">
-
 <head>
   <meta charset="ISO-8859-1">
   <meta charset="utf-8">
@@ -20,6 +17,13 @@
 
   <!-- Custom styles for this template-->
   <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  
+  <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		load();
+	});
+</script>
 
 </head>
 
@@ -56,7 +60,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Confirmed Cases</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">1530</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id = "local_total_cases">1530</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -73,10 +77,27 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Recovered & Discharged</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">754</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id = "local_recovered">754</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Active Cases -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Active Cases</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id = "local_active_cases">75</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-comments fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
@@ -92,7 +113,7 @@
                       <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Deaths</div>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">10</div>
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><div id = "local_deaths">34</div></div>
                         </div>
                       </div>
                     </div>
@@ -104,23 +125,6 @@
               </div>
             </div>
 
-            <!-- Suspected & Hospitalized -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Suspected & Hospitalized</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">75</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-comments fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-			
           </div>
 
           <!-- Content Row -->
@@ -195,8 +199,8 @@
   <!-- Core plugin JavaScript-->
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-  <!-- Custom scripts for all pages-->
-  <script src="js/sb-admin-2.min.js"></script>
+  <!-- Custom scripts for all pages
+  <script src="js/sb-admin-2.min.js"></script>-->
 
   <!-- Page level plugins -->
   <script src="vendor/chart.js/Chart.min.js"></script>
@@ -206,5 +210,26 @@
   <script src="js/demo/chart-pie-demo.js"></script>
 
 </body>
+
+<script>
+	function load() {
+		$.ajax({
+			url : "http://localhost:8080/v1/covid_statistical",
+			success : function(response){
+				console.log(response);
+				$('#local_total_cases').val(response.data.localTotalCases);
+				$('#local_recovered').val(response.data.localRecovered);
+				$('#local_active_cases').val(response.data.localActiveCases);
+				$('#local_deaths').val(response.data.localDeaths);
+				
+				document.getElementById("local_total_cases").innerHTML = response.data.localTotalCases;
+				document.getElementById("local_recovered").innerHTML = response.data.localRecovered;
+				document.getElementById("local_active_cases").innerHTML = response.data.localActiveCases;
+				document.getElementById("local_deaths").innerHTML = response.data.localDeaths;
+			}
+		});
+	};
+	
+</script>
 
 </html>
