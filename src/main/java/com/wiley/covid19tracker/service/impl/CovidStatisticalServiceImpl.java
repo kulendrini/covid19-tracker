@@ -12,14 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.wiley.covid19tracker.constant.Status;
 import com.wiley.covid19tracker.dto.CovidStatisticalDTO;
-import com.wiley.covid19tracker.dto.OperationData;
 import com.wiley.covid19tracker.dto.ResponseData;
 import com.wiley.covid19tracker.entity.CovidStatistical;
 import com.wiley.covid19tracker.repository.CovidStatisticalRepository;
 import com.wiley.covid19tracker.service.CovidStatisticalService;
-import com.wiley.covid19tracker.util.CommonUtils;
 
 @Service
 public class CovidStatisticalServiceImpl implements CovidStatisticalService{
@@ -29,12 +26,10 @@ public class CovidStatisticalServiceImpl implements CovidStatisticalService{
 	@Value( "${healthgov.coronavirus.url}" )
 	private String url;
 	
-	private CommonUtils appHelper;
 	private CovidStatisticalRepository covidStatisticalRepository;
 	
 	@Autowired
-	public CovidStatisticalServiceImpl(CommonUtils appHelper, CovidStatisticalRepository covidStatisticalRepository) {
-		this.appHelper = appHelper;
+	public CovidStatisticalServiceImpl(CovidStatisticalRepository covidStatisticalRepository) {
 		this.covidStatisticalRepository = covidStatisticalRepository;
 	}
 
@@ -50,8 +45,7 @@ public class CovidStatisticalServiceImpl implements CovidStatisticalService{
 	}
 
 	@Override
-	public CovidStatistical updateCovidStatistical() {
-		CovidStatistical response;
+	public void updateCovidStatistical() {
 		try {
 			Optional<CovidStatistical> covidStatistical = covidStatisticalRepository.findById(new Integer(1));
 			CovidStatistical latestCovidStatistical = getlatestCovidStatistical();
@@ -61,15 +55,14 @@ public class CovidStatisticalServiceImpl implements CovidStatisticalService{
 				covidStatistical.get().setLocalActiveCases(latestCovidStatistical.getLocalActiveCases());
 				covidStatistical.get().setLocalDeaths(latestCovidStatistical.getLocalDeaths());
 				covidStatistical.get().setUpdateDateTime(LocalDateTime.now());
-				response = covidStatisticalRepository.save(covidStatistical.get());
+				covidStatisticalRepository.save(covidStatistical.get());
 			} else {
 				latestCovidStatistical.setUpdateDateTime(LocalDateTime.now());
-				response = covidStatisticalRepository.save(latestCovidStatistical);
+				covidStatisticalRepository.save(latestCovidStatistical);
 			}
 		} catch (Exception e) {
-			response = new CovidStatistical();
+			covidStatisticalRepository.save(new CovidStatistical());
 		}
-		return response;
 	}
 	
 	private CovidStatisticalDTO getCovidStatisticalData() throws Exception {

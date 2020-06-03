@@ -8,6 +8,6 @@ public interface CovidStatisticalService {
 	
 	public CovidStatisticalDTO getCovidStatisticalInfo();
 
-	public CovidStatistical updateCovidStatistical();
+	public void updateCovidStatistical();
 	
 }

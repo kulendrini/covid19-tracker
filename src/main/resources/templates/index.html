@@ -203,6 +203,17 @@
   <!-- Page level custom scripts -->
   <script src="js/demo/chart-area-demo.js"></script>
   <script src="js/demo/chart-pie-demo.js"></script>
+  
+  <script th:inline="javascript">
+  
+    var localActiveCases = [[${value.localActiveCases}]];
+    var localRecovered = [[${value.localRecovered}]];
+    var localDeaths = [[${value.localDeaths}]];
+    
+    myPieChart.data.datasets[0].data.push(localActiveCases, localRecovered, localDeaths);
+    myPieChart.update();
+
+  </script>
 
 </body>
 

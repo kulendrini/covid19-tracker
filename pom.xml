@@ -66,19 +66,7 @@
 			<scope>compile</scope>
 		</dependency>
 		
-		<!-- mapstruct related dependencies -->
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>${org.mapstruct.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct-processor</artifactId>
-			<version>${org.mapstruct.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
+		<!-- schedular job  -->
 		<dependency>
 			<groupId>org.awaitility</groupId>
 			<artifactId>awaitility</artifactId>

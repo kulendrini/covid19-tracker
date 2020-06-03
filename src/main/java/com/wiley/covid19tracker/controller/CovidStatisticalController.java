@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wiley.covid19tracker.dto.CovidStatisticalDTO;
 import com.wiley.covid19tracker.dto.OperationData;
-import com.wiley.covid19tracker.service.CovidStatisticalService;
+import com.wiley.covid19tracker.service.CovidStatisticalApiService;
 
 @RestController
 @RequestMapping("v1/covid_statistical")
@@ -19,18 +19,18 @@ public class CovidStatisticalController {
 
 	private static final Logger log = LoggerFactory.getLogger(CovidStatisticalController.class);
 	
-	private CovidStatisticalService covidStatisticalService;
+	private CovidStatisticalApiService covidStatisticalService;
 	
 	@Autowired
-	public CovidStatisticalController(CovidStatisticalService covidStatisticalService) {
+	public CovidStatisticalController(CovidStatisticalApiService covidStatisticalService) {
 		this.covidStatisticalService = covidStatisticalService;
 	}
 	
 	@GetMapping
-	public ResponseEntity<CovidStatisticalDTO> getCovidStatisticalInfo() {
+	public ResponseEntity<OperationData<CovidStatisticalDTO>> getCovidStatisticalInfo() {
 		log.info("Get covid statistical updated info");
-		CovidStatisticalDTO info = covidStatisticalService.getCovidStatisticalInfo();
-		log.info("data to return");
-		return new ResponseEntity<CovidStatisticalDTO>(info, HttpStatus.OK);
+		OperationData<CovidStatisticalDTO> info = covidStatisticalService.getCovidStatisticalInfo();
+		log.debug("data to return - covid statistical info");
+		return new ResponseEntity<OperationData<CovidStatisticalDTO>>(info, HttpStatus.OK);
 	}
 }
