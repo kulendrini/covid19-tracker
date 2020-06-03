@@ -21,7 +21,7 @@ public class DashboardController {
 
 	@RequestMapping(value = {"/", "/dashboard"}, method = RequestMethod.GET)
 	public String vewDashboard(Model model) {
-		CovidStatisticalDTO covidStatisticalInfo = covidStatisticalService.getCovidStatisticalInfo().getData();
+		CovidStatisticalDTO covidStatisticalInfo = covidStatisticalService.getCovidStatisticalInfo();
 		model.addAttribute("value", covidStatisticalInfo);
 		return "index";
 	}

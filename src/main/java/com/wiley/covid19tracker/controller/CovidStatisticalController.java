@@ -27,10 +27,10 @@ public class CovidStatisticalController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<OperationData<CovidStatisticalDTO>> getCovidStatisticalInfo() {
+	public ResponseEntity<CovidStatisticalDTO> getCovidStatisticalInfo() {
 		log.info("Get covid statistical updated info");
-		OperationData<CovidStatisticalDTO> info = covidStatisticalService.getCovidStatisticalInfo();
-		log.debug("data to return : {}" , info);
-		return new ResponseEntity<OperationData<CovidStatisticalDTO>>(info, HttpStatus.OK);
+		CovidStatisticalDTO info = covidStatisticalService.getCovidStatisticalInfo();
+		log.info("data to return");
+		return new ResponseEntity<CovidStatisticalDTO>(info, HttpStatus.OK);
 	}
 }

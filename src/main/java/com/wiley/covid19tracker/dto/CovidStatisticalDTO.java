@@ -11,16 +11,16 @@ public class CovidStatisticalDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@JsonProperty("local_total_cases")
-	private int localTotalCases;
+	private int localTotalCases = 0;
 	
 	@JsonProperty("local_recovered")
-	private int localRecovered;
+	private int localRecovered = 0;
 	
 	@JsonProperty("local_active_cases")
-	private int localActiveCases;
+	private int localActiveCases = 0;
 	
 	@JsonProperty("local_deaths")
-	private int localDeaths;
+	private int localDeaths = 0;
 
 	public int getLocalTotalCases() {
 		return localTotalCases;

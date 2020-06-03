@@ -6,8 +6,8 @@ import com.wiley.covid19tracker.entity.CovidStatistical;
 
 public interface CovidStatisticalService {
 	
-	public OperationData<CovidStatisticalDTO> getCovidStatisticalInfo();
+	public CovidStatisticalDTO getCovidStatisticalInfo();
 
-	public OperationData<?> updateCovidStatistical();
+	public CovidStatistical updateCovidStatistical();
 	
 }

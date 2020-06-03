@@ -27,7 +27,7 @@ public class CovidStatisticalServiceImpl implements CovidStatisticalService{
 	private static final Logger log = LoggerFactory.getLogger(CovidStatisticalServiceImpl.class);
 	
 	@Value( "${healthgov.coronavirus.url}" )
-	private String BASE_URL;
+	private String url;
 	
 	private CommonUtils appHelper;
 	private CovidStatisticalRepository covidStatisticalRepository;
@@ -39,56 +39,57 @@ public class CovidStatisticalServiceImpl implements CovidStatisticalService{
 	}
 
 	@Override
-	public OperationData<CovidStatisticalDTO> getCovidStatisticalInfo() {
-		CovidStatisticalDTO info = getCovidtStatisticalData();
-		OperationData<CovidStatisticalDTO> opData;
-		if(info != null) opData = appHelper.generateOperationData(Status.SUCCESS, info, null);
-		else opData = appHelper.generateOperationData(Status.FAILURE, null, null);
-		return opData;
+	public CovidStatisticalDTO getCovidStatisticalInfo() {
+		CovidStatisticalDTO response;
+		try {
+			response = getCovidStatisticalData();
+		} catch (Exception e) {
+			response = new CovidStatisticalDTO();
+		}
+		return response;
 	}
 
 	@Override
-	public OperationData<?> updateCovidStatistical() {
-		OperationData<?> opData;
-		CovidStatistical covidEntity = updateCovidStatisticalInfo();
-		if(covidEntity != null) opData = appHelper.generateOperationData(Status.SUCCESS, covidEntity, null);
-		else opData = appHelper.generateOperationData(Status.FAILURE, null, null);
-		return opData;
+	public CovidStatistical updateCovidStatistical() {
+		CovidStatistical response;
+		try {
+			Optional<CovidStatistical> covidStatistical = covidStatisticalRepository.findById(new Integer(1));
+			CovidStatistical latestCovidStatistical = getlatestCovidStatistical();
+			if (covidStatistical.isPresent()) {
+				covidStatistical.get().setLocalTotalCases(latestCovidStatistical.getLocalTotalCases());
+				covidStatistical.get().setLocalRecovered(latestCovidStatistical.getLocalRecovered());
+				covidStatistical.get().setLocalActiveCases(latestCovidStatistical.getLocalActiveCases());
+				covidStatistical.get().setLocalDeaths(latestCovidStatistical.getLocalDeaths());
+				covidStatistical.get().setUpdateDateTime(LocalDateTime.now());
+				response = covidStatisticalRepository.save(covidStatistical.get());
+			} else {
+				covidStatistical.get().setUpdateDateTime(LocalDateTime.now());
+				response = covidStatisticalRepository.save(latestCovidStatistical);
+			}
+		} catch (Exception e) {
+			response = new CovidStatistical();
+		}
+		return response;
 	}
 	
-	private CovidStatisticalDTO getCovidtStatisticalData() {
+	private CovidStatisticalDTO getCovidStatisticalData() throws Exception {
 		CovidStatistical info = covidStatisticalRepository.getCovidStatistical();
 		return convertToDTO(info);
 	}
 	
-	private CovidStatisticalDTO convertToDTO(CovidStatistical covidStatistical) {
+	private CovidStatisticalDTO convertToDTO(CovidStatistical covidStatistical) throws Exception {
 		CovidStatisticalDTO covidStatisticalDto = new CovidStatisticalDTO();
 		BeanUtils.copyProperties(covidStatistical, covidStatisticalDto);
 		return covidStatisticalDto;
 	}
 
-	private CovidStatistical updateCovidStatisticalInfo() {
-		Optional<CovidStatistical> covidStatistical = covidStatisticalRepository.findById(new Integer(1));
-		CovidStatistical latestCovidStatistical = retreiveDataFromExternalSource();
-		if (covidStatistical.isPresent()) {
-			covidStatistical.get().setLocalTotalCases(latestCovidStatistical.getLocalTotalCases());
-			covidStatistical.get().setLocalRecovered(latestCovidStatistical.getLocalRecovered());
-			covidStatistical.get().setLocalActiveCases(latestCovidStatistical.getLocalActiveCases());
-			covidStatistical.get().setLocalDeaths(latestCovidStatistical.getLocalDeaths());
-			covidStatistical.get().setUpdateDateTime(LocalDateTime.now());
-			return covidStatisticalRepository.save(covidStatistical.get());
-		} else {
-			return covidStatisticalRepository.save(latestCovidStatistical);
-		}
-	}
-	
-	private CovidStatistical retreiveDataFromExternalSource() {
+	private CovidStatistical getlatestCovidStatistical() throws Exception {
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<ResponseData> response = restTemplate.getForEntity(BASE_URL, ResponseData.class);
+		ResponseEntity<ResponseData> response = restTemplate.getForEntity(url, ResponseData.class);
 		return dtoToEntity(response.getBody().getData());
 	}
 	
-	private CovidStatistical dtoToEntity(CovidStatisticalDTO dto) {
+	private CovidStatistical dtoToEntity(CovidStatisticalDTO dto) throws Exception {
 		CovidStatistical entity = new CovidStatistical();
 		BeanUtils.copyProperties(dto, entity);
 		return entity;
