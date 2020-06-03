@@ -8,7 +8,7 @@ public class ResponseData {
 	private static final long serialVersionUID = 1L;
 	private boolean success;
 	private String message;
-	private CurrentStatisticalInfo statistical;
+	private CovidStatisticalDTO statistical;
 	
 	public boolean isSuccess() {
 		return success;
@@ -26,11 +26,11 @@ public class ResponseData {
 		this.message = message;
 	}
 	
-	public CurrentStatisticalInfo getData() {
+	public CovidStatisticalDTO getData() {
 		return statistical;
 	}
 	
-	public void setData(CurrentStatisticalInfo statistical) {
+	public void setData(CovidStatisticalDTO statistical) {
 		this.statistical = statistical;
 	}
 	
