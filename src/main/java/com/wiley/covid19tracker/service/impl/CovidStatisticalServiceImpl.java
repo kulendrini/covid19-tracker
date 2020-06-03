@@ -1,5 +1,6 @@
 package com.wiley.covid19tracker.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -67,14 +68,15 @@ public class CovidStatisticalServiceImpl implements CovidStatisticalService{
 	}
 
 	private CovidStatistical updateCovidStatisticalInfo() {
-		Optional<CovidStatistical> CovidStatistical = covidStatisticalRepository.findById(new Integer(1));
+		Optional<CovidStatistical> covidStatistical = covidStatisticalRepository.findById(new Integer(1));
 		CovidStatistical latestCovidStatistical = retreiveDataFromExternalSource();
-		if (CovidStatistical.isPresent()) {
-			CovidStatistical.get().setLocalTotalCases(latestCovidStatistical.getLocalTotalCases());
-			CovidStatistical.get().setLocalRecovered(latestCovidStatistical.getLocalRecovered());
-			CovidStatistical.get().setLocalActiveCases(latestCovidStatistical.getLocalActiveCases());
-			CovidStatistical.get().setLocalDeaths(latestCovidStatistical.getLocalDeaths());
-			return covidStatisticalRepository.save(CovidStatistical.get());
+		if (covidStatistical.isPresent()) {
+			covidStatistical.get().setLocalTotalCases(latestCovidStatistical.getLocalTotalCases());
+			covidStatistical.get().setLocalRecovered(latestCovidStatistical.getLocalRecovered());
+			covidStatistical.get().setLocalActiveCases(latestCovidStatistical.getLocalActiveCases());
+			covidStatistical.get().setLocalDeaths(latestCovidStatistical.getLocalDeaths());
+			covidStatistical.get().setUpdateDateTime(LocalDateTime.now());
+			return covidStatisticalRepository.save(covidStatistical.get());
 		} else {
 			return covidStatisticalRepository.save(latestCovidStatistical);
 		}
