@@ -63,7 +63,7 @@ public class CovidStatisticalServiceImpl implements CovidStatisticalService{
 				covidStatistical.get().setUpdateDateTime(LocalDateTime.now());
 				response = covidStatisticalRepository.save(covidStatistical.get());
 			} else {
-				covidStatistical.get().setUpdateDateTime(LocalDateTime.now());
+				latestCovidStatistical.setUpdateDateTime(LocalDateTime.now());
 				response = covidStatisticalRepository.save(latestCovidStatistical);
 			}
 		} catch (Exception e) {
