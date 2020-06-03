@@ -205,14 +205,21 @@
   <script src="js/demo/chart-pie-demo.js"></script>
   
   <script th:inline="javascript">
-  
     var localActiveCases = [[${value.localActiveCases}]];
     var localRecovered = [[${value.localRecovered}]];
     var localDeaths = [[${value.localDeaths}]];
     
     myPieChart.data.datasets[0].data.push(localActiveCases, localRecovered, localDeaths);
     myPieChart.update();
-
+    
+    var chartData = [[${chartData}]];
+    for(var i = 0; i < chartData.length; i++ ){
+    	myLineChart.data.labels.push(chartData[i].month);
+    	myLineChart.data.datasets[0].data.push(chartData[i].total);
+    	myLineChart.data.datasets[1].data.push(chartData[i].active);
+    }
+    myLineChart.update();
+  
   </script>
 
 </body>

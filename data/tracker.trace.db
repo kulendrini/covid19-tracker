@@ -1,0 +1,6 @@
+2020-06-04 02:32:34 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'March' (CHART_DATA: ""MONTH"" INTEGER)"; SQL statement:
+UPDATE "PUBLIC"."CHART_DATA" SET "ID"=? ,"ACTIVE"=? ,"MONTH"=? ,"TOTAL"=?  WHERE "ID"=? [22018-200]
+2020-06-04 02:32:34 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'March' (CHART_DATA: ""MONTH"" INTEGER)"; SQL statement:
+UPDATE "PUBLIC"."CHART_DATA" SET "ID"=? ,"ACTIVE"=? ,"MONTH"=? ,"TOTAL"=?  WHERE "ID"=? [22018-200]

@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wiley.covid19tracker.dto.ChartDataDTO;
 import com.wiley.covid19tracker.dto.CovidStatisticalDTO;
 import com.wiley.covid19tracker.dto.OperationData;
 import com.wiley.covid19tracker.service.CovidStatisticalApiService;
@@ -32,5 +35,13 @@ public class CovidStatisticalController {
 		OperationData<CovidStatisticalDTO> info = covidStatisticalService.getCovidStatisticalInfo();
 		log.debug("data to return - covid statistical info");
 		return new ResponseEntity<OperationData<CovidStatisticalDTO>>(info, HttpStatus.OK);
+	}
+	
+	@PostMapping("chart_data")
+	public ResponseEntity<OperationData<?>> saveChartData(@RequestBody ChartDataDTO chartDataDTo) {
+		log.info("Get covid statistical updated info");
+		OperationData<?> info = covidStatisticalService.updateChartData(chartDataDTo);
+		log.debug("data to return - covid statistical info");
+		return new ResponseEntity<OperationData<?>>(info, HttpStatus.OK);
 	}
 }

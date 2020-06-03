@@ -1,13 +1,13 @@
 package com.wiley.covid19tracker.service;
 
-import com.wiley.covid19tracker.dto.CovidStatisticalDTO;
-import com.wiley.covid19tracker.dto.OperationData;
-import com.wiley.covid19tracker.entity.CovidStatistical;
+import java.util.HashMap;
 
 public interface CovidStatisticalService {
 	
-	public CovidStatisticalDTO getCovidStatisticalInfo();
+	public HashMap getCovidStatisticalInfo();
 
 	public void updateCovidStatistical();
+	
+	public void updateChartData();
 	
 }

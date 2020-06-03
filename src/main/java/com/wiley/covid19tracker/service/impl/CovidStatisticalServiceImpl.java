@@ -1,6 +1,8 @@
 package com.wiley.covid19tracker.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -12,9 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.wiley.covid19tracker.dto.ChartDataDTO;
 import com.wiley.covid19tracker.dto.CovidStatisticalDTO;
 import com.wiley.covid19tracker.dto.ResponseData;
+import com.wiley.covid19tracker.entity.ChartData;
 import com.wiley.covid19tracker.entity.CovidStatistical;
+import com.wiley.covid19tracker.repository.ChartDataRepository;
 import com.wiley.covid19tracker.repository.CovidStatisticalRepository;
 import com.wiley.covid19tracker.service.CovidStatisticalService;
 
@@ -27,20 +32,30 @@ public class CovidStatisticalServiceImpl implements CovidStatisticalService{
 	private String url;
 	
 	private CovidStatisticalRepository covidStatisticalRepository;
+	private ChartDataRepository chartDataRepository;
 	
 	@Autowired
-	public CovidStatisticalServiceImpl(CovidStatisticalRepository covidStatisticalRepository) {
+	public CovidStatisticalServiceImpl(CovidStatisticalRepository covidStatisticalRepository, 
+			ChartDataRepository chartDataRepository) {
 		this.covidStatisticalRepository = covidStatisticalRepository;
+		this.chartDataRepository = chartDataRepository;
 	}
 
 	@Override
-	public CovidStatisticalDTO getCovidStatisticalInfo() {
-		CovidStatisticalDTO response;
+	public HashMap getCovidStatisticalInfo() {
+		HashMap response = new HashMap();
+		CovidStatisticalDTO covidStatisticalResponse;
+		ArrayList<ChartDataDTO> chartDataResponse;
 		try {
-			response = getCovidStatisticalData();
+			covidStatisticalResponse = getCovidStatisticalData();
+			chartDataResponse = getChartData();
 		} catch (Exception e) {
-			response = new CovidStatisticalDTO();
+			covidStatisticalResponse = new CovidStatisticalDTO();
+			chartDataResponse = new ArrayList<ChartDataDTO>();
+			log.error("Error occured when mapping data. Error message : {}", e.getMessage());
 		}
+		response.put("CovidStatisticalResponse", covidStatisticalResponse);
+		response.put("ChartData", chartDataResponse);
 		return response;
 	}
 
@@ -62,12 +77,29 @@ public class CovidStatisticalServiceImpl implements CovidStatisticalService{
 			}
 		} catch (Exception e) {
 			covidStatisticalRepository.save(new CovidStatistical());
+			log.error("Error occured when saving data. Error message : {}", e.getMessage());
 		}
+	}
+	
+	@Override
+	public void updateChartData() {
+
 	}
 	
 	private CovidStatisticalDTO getCovidStatisticalData() throws Exception {
 		CovidStatistical info = covidStatisticalRepository.getCovidStatistical();
 		return convertToDTO(info);
+	}
+	
+	private ArrayList<ChartDataDTO> getChartData() throws Exception {
+		ArrayList<ChartDataDTO> listDto = new ArrayList<ChartDataDTO>();
+		Iterable<ChartData> findAll = chartDataRepository.findAll();
+		for (ChartData chartData : findAll) {
+			ChartDataDTO dto = new ChartDataDTO();
+			BeanUtils.copyProperties(chartData, dto);
+			listDto.add(dto);
+		}
+		return listDto;
 	}
 	
 	private CovidStatisticalDTO convertToDTO(CovidStatistical covidStatistical) throws Exception {

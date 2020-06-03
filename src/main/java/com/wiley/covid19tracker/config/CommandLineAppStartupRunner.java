@@ -1,23 +1,25 @@
-package com.wiley.covid19tracker;
+package com.wiley.covid19tracker.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import com.wiley.covid19tracker.service.CovidStatisticalService;
 
 @Component
-public class Scheduler {
-
+public class CommandLineAppStartupRunner implements CommandLineRunner {
+	
 	private CovidStatisticalService covidStatisticalService;
 	
 	@Autowired
-	public Scheduler(CovidStatisticalService covidStatisticalService) {
+	public CommandLineAppStartupRunner(CovidStatisticalService covidStatisticalService) {
 		this.covidStatisticalService = covidStatisticalService;
 	}
 
-	@Scheduled(cron = "${cronExpression}")
-	public void updateCovidStatisticalData() {
+	@Override
+	public void run(String... args) throws Exception {
 		covidStatisticalService.updateCovidStatistical();
+		covidStatisticalService.updateChartData();
 	}
+
 }
